@@ -1,0 +1,1 @@
+# Escaneo_Bullet_Journal
