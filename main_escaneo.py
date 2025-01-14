@@ -1,23 +1,16 @@
+
 import os
-
-def create_directory_if_not_exists(path):
-    """Creates a directory if it does not exist."""
-    if not os.path.exists(path):
-        os.makedirs(path)
-
-def get_validated_input(prompt, validation_fn, error_message):
-    """Prompts the user for input and validates it using a provided function."""
-    while True:
-        user_input = input(prompt)
-        if validation_fn(user_input):
-            return user_input
-        print(error_message)
+import sys
+script_directory = os.path.dirname(os.path.abspath(__file__))
+function_library = os.path.abspath(os.path.join(script_directory, 'Library'))
+sys.path.append(function_library) 
+from folders_files_open import open_folder, create_directory_if_not_exists
+from user_date_input import get_month_year
 
 def main():
-    folder_path = 'G:\\My Drive\\Projects\\Escaneo Insertos'
-    PDF_library = os.path.join(folder_path, "PDF_Library")
+    working_folder = os.path.abspath(os.path.join(script_directory, '..'))    
+    PDF_library = os.path.join(working_folder, "PDF_Library")
     create_directory_if_not_exists(PDF_library)
-
     print("¿El Inserto ya tiene un código en la portada?")
     print("1. Sí, ya tiene")
     print("2. No, es un inserto nuevo")
@@ -31,30 +24,17 @@ def main():
             break
 
         elif step_0 == "2":
-            # Validating year
-            insert_ano = get_validated_input(
-                "¿Cuál es año del primer registro? (4 dígitos): ",
-                lambda x: x.isdigit() and len(x) == 4,
-                "Por favor, ingrese un año válido de 4 dígitos."
-            )
-
-            # Validating month
-            insert_mes = get_validated_input(
-                "¿Cuál es mes del primer registro? (2 dígitos): ",
-                lambda x: x.isdigit() and len(x) == 2 and 1 <= int(x) <= 12,
-                "Por favor, ingrese un mes válido entre 01 y 12."
-            )
-
+            mes, year = get_month_year()
+            print(f"Mes ingresado: {mes}, Año ingresado: {year}")
             insert_label = input("¿Cuál es la Materia o tema del inserto? (sin espacios): ").replace(" ", "")
             insert_label2 = input("¿Cuál es la referencia o número de inserto? (sin espacios): ").replace(" ", "")
 
-            pdf_name = f"{insert_ano}{insert_mes}_{insert_label}_{insert_label2}.pdf"
+            pdf_name = f"{year} - {mes}_{insert_label}_{insert_label2}.pdf"
             pdf_path = os.path.join(PDF_library, pdf_name)
 
-            temp_directory = os.path.join(folder_path, 'Temp')
+            temp_directory = os.path.join(working_folder, 'Temp')
             create_directory_if_not_exists(temp_directory)
-
-            os.startfile(temp_directory)  # Open the temp directory
+            open_folder(temp_directory)
             input("Pasa el PDF que hayas escaneado a la carpeta que se abrió y presiona enter")
 
             # Search for a PDF file in the temp directory
@@ -84,6 +64,7 @@ def main():
 
         else:
             print("Opción no válida. Por favor, intente de nuevo.")
+
 
 if __name__ == "__main__":
     main()
