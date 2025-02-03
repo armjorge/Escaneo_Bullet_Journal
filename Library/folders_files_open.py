@@ -1,7 +1,6 @@
 import subprocess
 import subprocess
 import platform
-import glob
 import os
 
 def open_pdf(pdf_path):
