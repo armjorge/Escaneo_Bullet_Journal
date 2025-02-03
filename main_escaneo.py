@@ -8,6 +8,8 @@ from folders_files_open import create_directory_if_not_exists
 from STEP_A_Dict import STEP_A_get_string_populated, STEP_A_4_validdict
 from STEP_B_PDFhandling import STEP_B_PDF_HANDLING, STEP_B1_read_labeled_pdf
 from STEP_C_internal_reference import STEP_C_feed_DF
+from STEP_D_QR import STEP_D_CODE
+
 def main():
     working_folder = os.path.abspath(os.path.join(script_directory, '..'))    
     PDF_library = os.path.join(working_folder, "PDF_Library")
@@ -15,10 +17,15 @@ def main():
     df_referencia_interna = os.path.join(working_folder, "processed_files.pickle")
     temp_directory = os.path.join(working_folder, 'Temp')    
     create_directory_if_not_exists(PDF_library)
+    QR_library = os.path.join(working_folder, "QR_Library")
+    create_directory_if_not_exists(QR_library)
+    #result_dict = {'2024 11 19 Bullet Journal Personal.pdf': "{'Primer registro': '19/11/2024', 'Proyecto': 'Reg Cotidiano Futuro y Mensual', 'Materia': 'Bullet Journal Personal', 'Nota': 'Un inserto, reg cotidiano mensual y futuro'}"}
+    #STEP_D_CODE(result_dict, QR_library)
     print("¿El Inserto ya tiene un código en la portada?")
-    print("1. Sí, ya tiene")
-    print("2. No, es un inserto nuevo")
-    print("3. Enlista todos los insertos")
+    print("\t1. Sí, ya tiene, actualizar")
+    print("\t2. No, es un inserto nuevo")
+    print("\t3. Enlista y haz copia de todos los insertos")
+    print("\t4. Genera QRs")
     while True:
         step_0 = input("Seleccione una opción (1/2/3): ")
         if step_0 == "1":
@@ -38,6 +45,7 @@ def main():
             # ✅ Move pdf_path_list[0] to PDF_library
             source_path = pdf_path_list[0]
             destination_path = os.path.join(PDF_library, os.path.basename(source_path))
+            STEP_D_CODE(result_dict, QR_library)
             try:
                 shutil.move(source_path, destination_path)
                 print(f"✅ Archivo movido a la biblioteca: {destination_path}")
